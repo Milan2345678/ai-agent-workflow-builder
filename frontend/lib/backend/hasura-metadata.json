@@ -1,0 +1,101 @@
+{
+  "version": 3,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          "public.organizations",
+          "public.organization_members",
+          "public.workflows",
+          "public.workflow_steps",
+          "public.workflow_triggers",
+          "public.workflow_runs",
+          "public.step_runs"
+        ],
+        "configuration": {
+          "connection_info": {
+            "database_url": {
+              "from_env": "PG_DATABASE_URL"
+            },
+            "pool_settings": {
+              "max_connections": 50,
+              "idle_timeout": 180,
+              "retry_delay": 5,
+              "pool_timeout": 30
+            }
+          }
+        }
+      }
+    ],
+    "api_limits": {},
+    "custom_types": {
+      "input_objects": [],
+      "objects": [],
+      "scalars": []
+    },
+    "actions": [
+      {
+        "name": "triggerWorkflowRun",
+        "definition": {
+          "kind": "synchronous",
+          "handler": "http://host.docker.internal:3000/api/hasura/actions/trigger-workflow-run",
+          "forward_client_headers": true,
+          "timeout": 60,
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "arguments": [
+            {
+              "name": "workflowId",
+              "type": "uuid"
+            },
+            {
+              "name": "input",
+              "type": "jsonb"
+            }
+          ],
+          "output_type": "TriggerWorkflowRunOutput"
+        }
+      },
+      {
+        "name": "approveStep",
+        "definition": {
+          "kind": "synchronous",
+          "handler": "http://host.docker.internal:3000/api/hasura/actions/approve-step",
+          "forward_client_headers": true,
+          "timeout": 60,
+          "headers": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "arguments": [
+            {
+              "name": "runId",
+              "type": "uuid"
+            },
+            {
+              "name": "stepId",
+              "type": "uuid"
+            },
+            {
+              "name": "approval",
+              "type": "jsonb"
+            }
+          ],
+          "output_type": "ApproveStepOutput"
+        }
+      }
+    ],
+    "cron_triggers": [],
+    "query_collections": [],
+    "allowlist": []
+  }
+}

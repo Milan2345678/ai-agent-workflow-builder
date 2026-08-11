@@ -1,0 +1,5 @@
+version: 3
+endpoint: https://hasura.example.com
+admin_secret: replace-me
+metadata_directory: metadata
+actions: {}
